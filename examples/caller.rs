@@ -32,7 +32,24 @@ use std::time::{SystemTime, UNIX_EPOCH};
 //     Ok(())
 // }
 
+#[tokio::main]
+async fn main() {
+    // let listener = TcpListener::bind("127.0.0.1:8080").await.unwrap();
+    //     println!("rpc server listening on port 8080");
 
-fn main() {
-    println!("Hello, world!");
+    //     loop {
+    //         match listener.accept().await {
+    //             Ok((socket, addr)) => {
+    //                 println!("New connection from node: {}", addr);
+    //                 // 连接上别的rpc节点；开启一个新的线程循环处理消息
+    //                 let service_map = self.service_map.clone();
+    //                 tokio::spawn(async move {
+    //                     on_message(service_map,socket).await;
+    //                 });                    
+    //             }
+    //             Err(e) => {
+    //                 println!("Failed to accept connection: {}", e);
+    //             }
+    //         }
+    //     }
 }

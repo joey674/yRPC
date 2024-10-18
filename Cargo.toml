@@ -9,7 +9,11 @@ path = "src/lib.rs"
 
 [[bin]]
 name = "callee"
-path = "examples/callee_use_marco.rs"
+path = "examples/callee_v2.rs"
+
+[[bin]]
+name = "caller"
+path = "examples/caller.rs"
 
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }  

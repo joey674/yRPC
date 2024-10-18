@@ -102,17 +102,19 @@ pub fn rpc_service(attr: TokenStream, item: TokenStream) -> TokenStream
     let input_struct = syn::parse_macro_input!(item as syn::ItemStruct);
     let struct_name = &input_struct.ident;
 
-    // 解析属性参数，例如 #[rpc_service(login, logout)]
+    // 解析属性参数，#[rpc_service(login, logout)]，把传入的方法名解析成字符串；
     let args = syn::parse_macro_input!(attr as RpcServiceArgs);
     let methods = args.methods;
 
-    // 将方法名转换为字符串，并生成方法映射
+    // 在这个部分就是对每个参数生成quote的代码片段；然后再后面在get_methods方法中直接插入这段
+    // 
+    // 这里的参数其实是方法名；然后要根据方法名创建一个方法的ident；
+    // 使用 `syn::Ident::new(&format!("{}", method_name),  Span::call_site().into()）` 直接创建一个叫做这个字符串的方法
     let register_methods = methods.iter()
         .map(|method_ident| {
-                let method_name = method_ident.to_string();
+                let method_name = method_ident.clone().to_string();
 
-                use quote::spanned::Spanned;
-                let method_ident = syn::Ident::new(&format!("{}", method_name),  Span::call_site().into());
+                // let method_ident = syn::Ident::new(&format!("{}", method_name),  Span::call_site().into());
                 quote! {
                     (
                         #method_name,
@@ -144,9 +146,10 @@ pub fn rpc_service(attr: TokenStream, item: TokenStream) -> TokenStream
     TokenStream::from(expanded)
 }
 
-// 这里定义了一个解析器
+/// 这里定义了一个解析器，解析属性参数成字符串，#[rpc_service(login, logout)] => ["login", "logout"]
+/// 
 struct RpcServiceArgs {
-    methods: Vec<String>,
+    methods: Vec<syn::Ident>,
 }
 
 impl syn::parse::Parse for RpcServiceArgs {
@@ -155,7 +158,7 @@ impl syn::parse::Parse for RpcServiceArgs {
         let methods = input
             .parse_terminated(syn::Ident::parse, syn::Token![,])?
             .into_iter()
-            .map(|ident| ident.to_string())
+            // .map(|ident| ident.to_string())
             .collect();
 
         Ok(RpcServiceArgs { methods })

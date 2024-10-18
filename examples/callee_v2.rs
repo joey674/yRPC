@@ -84,7 +84,7 @@ pub struct UserService;
 
 #[tokio::main]
 async fn main() 
-{       
+{      
     RpcApplication::init();
 
     let user_service = UserService;
@@ -94,4 +94,6 @@ async fn main()
     let mut rpc_provider = RpcProvider::init(services_list);
 
     rpc_provider.run().await;
+
+    
 }
