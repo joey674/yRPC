@@ -3,8 +3,6 @@ use serde::{Deserialize, Serialize};
 use std::mem;
 
 
-/// 定义消息头结构体
-/// message_type: 0表示请求 1表示响应
 #[repr(packed)]
 pub struct RpcMessageHeader {
     pub body_length: u32,
@@ -14,9 +12,6 @@ pub struct RpcMessageHeader {
 pub const RPC_MESSAGE_HEADER_LEN: usize = mem::size_of::<RpcMessageHeader>(); 
 
 impl RpcMessageHeader {
-    /// 序列化/反序列化字节流 
-    /// 这里不直接发送struct 因为struct会有内存对齐问题 所以手动转化
-    /// 同时这里要考虑大端序小端序的问题 要从本地存储的小端序和网络传输的大端序进行转换
     pub fn to_bytes(&self) -> Vec<u8> {
         let mut buffer = Vec::with_capacity(RPC_MESSAGE_HEADER_LEN); 
         buffer.extend(&self.body_length.to_be_bytes()); 
@@ -36,9 +31,6 @@ impl RpcMessageHeader {
 }
 
 
-/// 定义消息体结构体
-/// 
-/// 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct RpcMessageBody {
     pub message_type: MessageType,
@@ -55,8 +47,6 @@ pub enum MessageType {
 }
 
 impl RpcMessageBody {
-    /// 序列化/反序列化字节流 
-    /// 发送端将用json格式序列化 所以这里我们可以直接用json反序列化，不用考虑大端序小端序的问题
     pub fn to_bytes(&self) -> Vec<u8> {
         serde_json::to_vec(self).unwrap() 
     }
