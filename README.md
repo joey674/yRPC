@@ -70,16 +70,36 @@ async fn main()
 {      
     RpcApplication::init();
 
-    let user_service = UserService;
-    let group_service = GroupService;
     let services_list: Vec<Box<dyn Service>> = vec![
-        Box::new(group_service),
-        Box::new(user_service)
+        Box::new(GroupService),
+        Box::new(UserService)
     ];
     let rpc_provider = RpcProvider::init(services_list);
 
     rpc_provider.run().await;
 }
 ```
-that is it! the rpc service is running! 
-For the caller part you can see in example/caller.rs. We can try to send multiple requests in a connection. here the framework provide uuid v4 verifications to identifies different requests in a connection. 
+
+
+For the caller part:
+```rust
+// caller.rs
+#[tokio::main]
+async fn main() {
+    RpcApplication::init();
+
+    let request = LoginRequest {
+        username: "dd".to_string(),
+        password: "123456".to_string(),
+    };
+
+    let responce = get_channel_instance()
+        .await
+        .send_request::<LoginRequest,LoginResponse>("UserService", "login", request)
+        .await
+        .unwrap();
+
+    println!("responce: {:#?}", responce);
+}
+```
+that is it! the rpc service is running and caller can use method provided by server!

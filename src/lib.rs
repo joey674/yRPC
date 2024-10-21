@@ -2,7 +2,7 @@ pub mod rpc_provider;
 pub mod rpc_application;
 pub mod rpc_config;
 pub mod rpc_protocol;
-
+pub mod rpc_channel;
 
 use serde_json::Value;
 
