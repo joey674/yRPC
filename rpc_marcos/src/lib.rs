@@ -9,7 +9,6 @@ use proc_macro::TokenStream;
 use quote::quote;
 use syn;
 use syn::DeriveInput;
-use proc_macro::Span;
 
 /// 示例1  派生宏
 /// 本示例只用作演示
@@ -23,26 +22,31 @@ use proc_macro::Span;
 ///     // vis   ident   type
 ///        pub   name:   &'a T, 
 /// }
-#[proc_macro_derive(RpcMacro)]
-pub fn rpc_macro_derive(input: TokenStream) -> TokenStream {
-    // 这里的源码（比如一个结构体）解析出来
-    let ast:DeriveInput = syn::parse(input).unwrap();
+/// 
+// pub trait TestService
+// {
+//     fn get_service_name(&self) -> &'static str;
+// }
+// #[proc_macro_derive(RpcMacro)]
+// pub fn rpc_macro_derive(input: TokenStream) -> TokenStream {
+//     // 这里的源码（比如一个结构体）解析出来
+//     let ast:DeriveInput = syn::parse(input).unwrap();
 
-    // 构建特征实现代码
-    impl_rpc_macro(&ast)
-}
-fn impl_rpc_macro(ast: &syn::DeriveInput) -> TokenStream {
-    let name = &ast.ident;
-    let gen = quote! {
-        impl TestService for #name {
-            // fn get_service_name(&self) -> &'static str;
-            fn get_service_name(&self) -> &'static str {
-                stringify!(#name)
-            }
-        }
-    };
-    gen.into()
-}
+//     // 构建特征实现代码
+//     impl_rpc_macro(&ast)
+// }
+// fn impl_rpc_macro(ast: &syn::DeriveInput) -> TokenStream {
+//     let name = &ast.ident;
+//     let gen = quote! {
+//         impl TestService for #name {
+//             // fn get_service_name(&self) -> &'static str;
+//             fn get_service_name(&self) -> &'static str {
+//                 stringify!(#name)
+//             }
+//         }
+//     };
+//     gen.into()
+// }
 
 
 /// 示例2 属性宏 
@@ -51,7 +55,7 @@ fn impl_rpc_macro(ast: &syn::DeriveInput) -> TokenStream {
 /// 第一个参数是属性宏中传入的参数 第二个参数是被标注的函数信息
 /// 
 #[proc_macro_attribute]
-pub fn rpc_method(_: TokenStream, item: TokenStream) -> TokenStream 
+pub fn method(_: TokenStream, item: TokenStream) -> TokenStream 
 {
     // 解析标注的函数
     let input_fn = syn::parse_macro_input!(item as syn::ItemFn);
@@ -96,7 +100,7 @@ pub fn rpc_method(_: TokenStream, item: TokenStream) -> TokenStream
 /// 本实例将用于库内； 所做的事情是把用户自定的方法注册给对应的服务，其实就是实现Service trait
 /// 这里不用派生宏的原因是 虽然我们是为了实现一个trait， 但是我想在实现trait的时候传入参数，这里用户可以直接传入方法名注册
 #[proc_macro_attribute]
-pub fn rpc_service(attr: TokenStream, item: TokenStream) -> TokenStream 
+pub fn service(attr: TokenStream, item: TokenStream) -> TokenStream 
 {   
     // 解析标注的结构体
     let input_struct = syn::parse_macro_input!(item as syn::ItemStruct);

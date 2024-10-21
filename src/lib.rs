@@ -19,8 +19,3 @@ pub trait Service: Send + Sync + 'static
     fn get_methods(&self) -> Vec<(&'static str, RpcMethod)>;
 }
 
-
-pub trait TestService
-{
-    fn get_service_name(&self) -> &'static str;
-}
