@@ -11,7 +11,7 @@ Add to your Cargo.toml dependencies:
 
 protocol.rs:
 The caller and callee should follow the same Interface protocol. In yRPC, a protocol.rs file is used; it plays a role like .proto file. But we dont define our services here.
-```
+```rust
 // protocol.rs
 #[derive(Serialize, Deserialize, Debug)]
 pub struct LoginRequest 
@@ -37,7 +37,7 @@ pub struct LoginResponse
 
 callee.rs:
 We start first with the callee part. the service should define like:
-```
+```rust
 // callee.rs
 #[yrpc::service(login)]
 pub struct UserService;
@@ -45,7 +45,7 @@ pub struct UserService;
 the methods can be multiple: #[yrpc::service(login,logout)];
 
 then we implement the methods:
-```
+```rust
 // callee.rs
 #[yrpc::method]
 fn login(request: LoginRequest) -> LoginResponse 
@@ -64,7 +64,7 @@ fn login(request: LoginRequest) -> LoginResponse
 ```
 
 after that, we write following code in main(the framework is based on tokio) to register the service to the provider:
-```
+```rust
 #[tokio::main]
 async fn main() 
 {      
