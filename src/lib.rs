@@ -2,16 +2,13 @@ pub mod rpc_provider;
 pub mod rpc_application;
 pub mod rpc_config;
 pub mod rpc_protocol;
-
+pub mod rpc_channel;
 
 use serde_json::Value;
 
-/// Service trait
-/// 供callee调用 为自己的Service实现
-/// 
-/// 
 
 pub type RpcMethod = Box<dyn Fn(Value) -> Value + Send + Sync>;
+
 
 pub trait Service: Send + Sync + 'static
 {
@@ -19,8 +16,3 @@ pub trait Service: Send + Sync + 'static
     fn get_methods(&self) -> Vec<(&'static str, RpcMethod)>;
 }
 
-
-pub trait TestService
-{
-    fn get_service_name(&self) -> &'static str;
-}

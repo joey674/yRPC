@@ -1,5 +1,5 @@
 [package]
-name = "rpc_macros"
+name = "yrpc"
 version = "0.1.0"
 edition = "2021"
 
@@ -7,5 +7,5 @@ edition = "2021"
 proc-macro = true
 
 [dependencies]
-syn = "2.0"    
+syn = "2.0.79"    
 quote = "1.0"  
