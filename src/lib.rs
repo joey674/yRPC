@@ -4,6 +4,9 @@ pub mod rpc_config;
 pub mod rpc_protocol;
 pub mod rpc_channel;
 
+pub mod encryption;
+pub use encryption::*;
+
 use serde_json::Value;
 
 
